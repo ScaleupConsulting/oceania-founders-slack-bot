@@ -4,8 +4,8 @@ dotenv.config({path: `.env.local`, override: true});
 
 const TIMEOUT_SECONDS = 60 * 60 * 24;
 
-const {App} = require('@slack/bolt');
-const app   = new App(
+const {App}    = require('@slack/bolt');
+const app      = new App(
   {
     token:         process.env.SLACK_BOT_TOKEN,
     signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -14,14 +14,8 @@ const app   = new App(
   }
 );
 const notifyMe = async () => {
-  const {members} = await app.client.users.list();
-  const lastUser  =
-          members.reduce((lastUser, user) =>
-                           !user.is_bot && !user.deleted && user.id !== 'USLACKBOT' &&
-                           (!lastUser || user.id > lastUser.id) ? user : lastUser,
-                         null);
-  const text      = `No message was sent in the last 24 hours.
-  Last user to join the workspace: ${lastUser.name} ${lastUser.real_name} ${lastUser.profile.real_name} ${lastUser.profile.display_name}`;
+  const text = `No message was sent in the last 24 hours.
+  Visit https://oceaniafounders.slack.com/admin to see the last 5 users to join the workspace`;
   await app.client.chat.postMessage({channel: 'U04MTT9UBC6', text});
 };
 
